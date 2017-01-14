@@ -11,13 +11,25 @@ class App extends Component {
     super();
     this.state =
     { movies: [],
-      newParty: true,
+      newParty: false,
+      parties: {},
       party: {},
       partyName:'',
      };
   }
+  componentDidMount(){
+    axios({
+      url: '.json',
+      baseURL: 'https://netflix-party.firebaseio.com/',
+      method: "GET"
+    }).then((response) => {
+      this.setState({ parties: response.data });
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
   createParty(event) {
-    let newParty = {partyName:this.state.partyName, movies: this.state.movies}
+    let newParty = {partyName:this.state.partyName, movies: this.state.movies, newParty: this.state.newParty}
     event.preventDefault()
     axios({
       url: '.json',
@@ -25,6 +37,7 @@ class App extends Component {
       method: "POST",
       data: newParty
     }).then((response) => {
+      console.log(response)
       let party = this.state.party;
       let partyId = response.data.name;
       party[partyId] = newParty;
