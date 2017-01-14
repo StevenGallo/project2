@@ -12,24 +12,29 @@ class App extends Component {
     this.state =
     { movies: [],
       newParty: false,
+      joinParty: false,
       parties: {},
       party: {},
       partyName:'',
      };
   }
   componentDidMount(){
+    this.getParties()
+  }
+  getParties(){
     axios({
       url: '.json',
       baseURL: 'https://netflix-party.firebaseio.com/',
       method: "GET"
     }).then((response) => {
+      console.log(response)
       this.setState({ parties: response.data });
     }).catch((error) => {
       console.log(error);
     });
   }
   createParty(event) {
-    let newParty = {partyName:this.state.partyName, movies: this.state.movies, newParty: this.state.newParty}
+    let newParty = {partyName:this.state.partyName, movies: this.state.movies, newParty: true}
     event.preventDefault()
     axios({
       url: '.json',
@@ -41,31 +46,42 @@ class App extends Component {
       let party = this.state.party;
       let partyId = response.data.name;
       party[partyId] = newParty;
-      this.setState({ party, newParty:false });
+      this.setState({ party });
     }).catch((error) => {
       console.log(error);
     });
+    this.getParties();
   }
-  newParty(event){
-    event.preventDefault()
+  joinParty(){
+    if(this.state.joinParty){
+    return (<form onSubmit={(e)=>this.createParty(e)}>
+        <input type="text" onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
+      <input className="btn-primary" type="submit" value="Submit" />
+    </form>)
+    }
+  }
+  newParty(){
     if(this.state.newParty){
-      return (<form onSubmit={(e)=>this.createParty(e)}>
-          <input type="text" defaultValue={this.props.newTweed}
-          onChange={(e)=>{this.setState({partyName:e.target.value})}} />
-        <input className="btn-primary" type="submit" value="Submit" />
-      </form>)
+    return (<form onSubmit={(e)=>this.createParty(e)}>
+        <input type="text" onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
+      <input className="btn-primary" type="submit" value="Submit" />
+    </form>)
     }
   }
   chooseParty(){
+    if(this.state.newParty===false&&this.state.joinParty==false){
     return (<div>
-      <button onClick={this.newParty(event)} className="btn-primary">New Party</button>
-      <button className="btn-primary">Join Party</button>
+      <button onClick={()=>{this.setState({ newParty:true })}} className="btn-primary">New Party</button>
+      <button onClick={()=>{this.setState({ joinParty:true })}} className="btn-primary">Join Party</button>
     </div>)
+  }
   }
   render() {
     return (
       <div className="App">
       {this.chooseParty()}
+      {this.newParty()}
+      {this.joinParty()}
       </div>
     );
   }
