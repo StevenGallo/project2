@@ -13,6 +13,7 @@ class App extends Component {
     { movies: [],
       newParty: false,
       joinParty: false,
+      key: '',
       parties: {},
       party: {},
       partyName:'',
@@ -46,15 +47,14 @@ class App extends Component {
       let party = this.state.party;
       let partyId = response.data.name;
       party[partyId] = newParty;
-      this.setState({ party });
+      this.setState({ party, key: response.data.name});
     }).catch((error) => {
       console.log(error);
     });
-    this.getParties();
   }
   joinParty(){
     if(this.state.joinParty){
-    return (<form onSubmit={(e)=>this.createParty(e)}>
+    return (<form onSubmit={(e)=>this.getParty(e)}>
         <input type="text" onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
       <input className="btn-primary" type="submit" value="Submit" />
     </form>)
@@ -74,7 +74,18 @@ class App extends Component {
       <button onClick={()=>{this.setState({ newParty:true })}} className="btn-primary">New Party</button>
       <button onClick={()=>{this.setState({ joinParty:true })}} className="btn-primary">Join Party</button>
     </div>)
+    }
   }
+  getParty(event){
+    event.preventDefault(event)
+    this.getParties()
+    console.log(this.state.parties)
+    for (const key in this.state.parties){
+      console.log(`${key} + ${this.state.parties[key].partyName}`)
+      if(this.state.partyName===this.state.parties[key].partyName){
+        console.log('found')
+      }else{console.log('notFound')}
+    }
   }
   render() {
     return (
