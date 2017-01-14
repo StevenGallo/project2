@@ -46,7 +46,8 @@ class App extends Component {
       console.log(error);
     });
   }
-  newParty(){
+  newParty(event){
+    event.preventDefault()
     if(this.state.newParty){
       return (<form onSubmit={(e)=>this.createParty(e)}>
           <input type="text" defaultValue={this.props.newTweed}
@@ -55,10 +56,16 @@ class App extends Component {
       </form>)
     }
   }
+  chooseParty(){
+    return (<div>
+      <button onClick={this.newParty(event)} className="btn-primary">New Party</button>
+      <button className="btn-primary">Join Party</button>
+    </div>)
+  }
   render() {
     return (
       <div className="App">
-        {this.newParty()}
+      {this.chooseParty()}
       </div>
     );
   }
