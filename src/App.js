@@ -17,6 +17,7 @@ class App extends Component {
       parties: {},
       party: {},
       partyName:'',
+      error: '',
      };
   }
   componentDidMount(){
@@ -34,9 +35,8 @@ class App extends Component {
       console.log(error);
     });
   }
-  createParty(event) {
+  createParty() {
     let newParty = {partyName:this.state.partyName, movies: this.state.movies, newParty: true}
-    event.preventDefault()
     axios({
       url: '.json',
       baseURL: 'https://netflix-party.firebaseio.com/',
@@ -54,16 +54,16 @@ class App extends Component {
   }
   joinParty(){
     if(this.state.joinParty){
-    return (<form onSubmit={(e)=>this.getParty(e)}>
-        <input type="text" onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
+    return (<form onSubmit={(e)=>this.handleGetParty(e)}>
+        <input type="text" autoFocus={true} value={this.state.partyName} required={true} onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
       <input className="btn-primary" type="submit" value="Submit" />
     </form>)
     }
   }
   newParty(){
     if(this.state.newParty){
-    return (<form onSubmit={(e)=>this.createParty(e)}>
-        <input type="text" onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
+    return (<form onSubmit={(e)=>this.handleCreateParty(e)}>
+        <input type="text" autoFocus={true} value={this.state.partyName} required={true} onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
       <input className="btn-primary" type="submit" value="Submit" />
     </form>)
     }
@@ -76,16 +76,38 @@ class App extends Component {
     </div>)
     }
   }
-  getParty(event){
+  handleGetParty(event){
     event.preventDefault(event)
+      if(this.checkName()){
+        this.getParty()
+      }else{
+      this.setState({partyName: '', error:'That party does not exist. Please enter valid party name'})
+    }
+  }
+  handleCreateParty(event){
+  event.preventDefault()
+    if(this.partyName!==true&&this.checkName()){
+      this.setState({partyName: '', error:'That party name already exists. Please choose a new name'})
+    }else{
+      this.createParty()
+    }
+  }
+  checkName(){
     this.getParties()
     console.log(this.state.parties)
     for (const key in this.state.parties){
       console.log(`${key} + ${this.state.parties[key].partyName}`)
       if(this.state.partyName===this.state.parties[key].partyName){
         console.log('found')
-      }else{console.log('notFound')}
+        return true
+      }else{
+        console.log('notFound')
+        return false
+      }
     }
+  }
+  getParty(){
+
   }
   render() {
     return (
@@ -93,6 +115,7 @@ class App extends Component {
       {this.chooseParty()}
       {this.newParty()}
       {this.joinParty()}
+      <p>{this.state.error}</p>
       </div>
     );
   }
