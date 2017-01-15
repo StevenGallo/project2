@@ -8,7 +8,8 @@ class Party extends Component {
       name:'',
       movies:[],
       addMovie:true,
-    }
+      error:'',
+      }
   }
   componentDidMount(){
     this.getMovies()
@@ -19,10 +20,21 @@ class Party extends Component {
       baseURL: 'https://netflix-party.firebaseio.com/',
       method: "GET"
     }).then((response) => {
-      console.log(response)
+      console.log(response.data)
+      let movies=response.data.movies
+      this.setState({movies})
     }).catch((error) => {
       console.log(error);
     });
+  }
+  checkMovies(){
+    this.getMovies()
+    let used=false
+    this.state.movies.map((movie)=>{
+      if(movie===this.state.name){
+        used=true
+      }})
+    return used
   }
   addMovieTitle(){
     if(this.state.addMovie){
@@ -33,28 +45,38 @@ class Party extends Component {
     }
   }
   addMovie(){
+    let movies=this.state.movies
+      movies.push(this.state.name)
+      this.setState({ addMovie:false })
     axios({
       url: `${this.props.partyKey}.json`,
       baseURL: 'https://netflix-party.firebaseio.com/',
       method: "PATCH",
-      data: { movies: this.state.movies}
+      data: { movies }
     }).then((response) => {
       console.log(response)
-      let movies=this.state.movies
-      movies.push(this.state.name)
-      this.setState({ movies, addMovie:false })
+      movies=response.data.movies
+      this.setState({ movies})
       }).catch((error) => {
         console.log(error);
       });
   }
   handleMovieAdd(event){
     event.preventDefault()
-    this.addMovie()
+    if(this.checkMovies()===false){
+      this.addMovie()
+    }else{
+      this.setState({
+        error: 'That movie is already on the list. Please choose a new movie',
+        name:''
+      })
+    }
   }
   render() {
     return (
-      <div>
+      <div className="App">
       {this.addMovieTitle()}
+      {this.state.error}
         <ul className="list-unstyled center-block list-group">
       {this.state.movies.map((movie,index) => {
         return<li key={index}>{movie}</li>})}
