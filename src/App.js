@@ -10,8 +10,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state =
-    { movies: [],
-      newParty: false,
+    { newParty: false,
       joinParty: false,
       key: '',
       parties: {},
@@ -37,7 +36,7 @@ class App extends Component {
     });
   }
   createParty() {
-    let newParty = {partyName:this.state.partyName, movies: this.state.movies}
+    let newParty = {partyName:this.state.partyName}
     axios({
       url: '.json',
       baseURL: 'https://netflix-party.firebaseio.com/',
@@ -70,7 +69,7 @@ class App extends Component {
     }
   }
   chooseParty(){
-    if(this.state.newParty===false&&this.state.joinParty==false){
+    if(this.state.newParty===false&&this.state.joinParty===false){
     return (<div>
       <button onClick={()=>{this.setState({ newParty:true })}} className="btn-primary">New Party</button>
       <button onClick={()=>{this.setState({ joinParty:true })}} className="btn-primary">Join Party</button>
@@ -106,7 +105,7 @@ class App extends Component {
       if(this.state.partyName===this.state.parties[key].partyName){
         let party=this.state.party;
         party[key]=this.state.parties[key]
-        this.setState({party})
+        this.setState({party, key:key})
         found=true
       }
     }
@@ -117,19 +116,22 @@ class App extends Component {
 
   }
   render() {
+    if(this.state.partyTime){
+      return(<Party
+        parties={this.state.parties}
+        party={this.state.party}
+        partyKey={this.state.key}
+        />)
+    }else{
     return (
       <div className="App">
       {this.chooseParty()}
       {this.newParty()}
       {this.joinParty()}
       <p>{this.state.error}</p>
-      <Party
-      movies={this.state.movies}
-      parties={this.state.parties}
-      party={this.state.party}
-      partyTime={this.state.partyTime} />
       </div>
     );
+    }
   }
 }
 
