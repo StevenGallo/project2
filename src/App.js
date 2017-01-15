@@ -7,8 +7,8 @@ import axios from 'axios';
 import './App.css';
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state =
     { movies: [],
       newParty: false,
@@ -18,6 +18,7 @@ class App extends Component {
       party: {},
       partyName:'',
       error: '',
+      partyTime: false
      };
   }
   componentDidMount(){
@@ -53,7 +54,7 @@ class App extends Component {
     });
   }
   joinParty(){
-    if(this.state.joinParty){
+    if(this.state.joinParty&&this.state.partyTime===false){
     return (<form onSubmit={(e)=>this.handleGetParty(e)}>
         <input type="text" autoFocus={true} value={this.state.partyName} required={true} onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
       <input className="btn-primary" type="submit" value="Submit" />
@@ -61,7 +62,7 @@ class App extends Component {
     }
   }
   newParty(){
-    if(this.state.newParty){
+    if(this.state.newParty&&this.state.partyTime===false){
     return (<form onSubmit={(e)=>this.handleCreateParty(e)}>
         <input type="text" autoFocus={true} value={this.state.partyName} required={true} onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
       <input className="btn-primary" type="submit" value="Submit" />
@@ -93,6 +94,7 @@ class App extends Component {
        error:'That party name already exists. Please choose a new name'})
     }else{
       this.createParty()
+      this.getParty()
     }
   }
   checkName(){
@@ -102,13 +104,16 @@ class App extends Component {
     for (const key in this.state.parties){
       console.log(`${key} + ${this.state.parties[key].partyName}`)
       if(this.state.partyName===this.state.parties[key].partyName){
-        console.log('found')
+        let party=this.state.party;
+        party[key]=this.state.parties[key]
+        this.setState({party})
         found=true
       }
     }
     return found
   }
   getParty(){
+    this.setState({partyTime:true})
 
   }
   render() {
@@ -118,9 +123,11 @@ class App extends Component {
       {this.newParty()}
       {this.joinParty()}
       <p>{this.state.error}</p>
-      <AddMovie />
-      <MovieList />
-      <Party />
+      <Party
+      movies={this.state.movies}
+      parties={this.state.parties}
+      party={this.state.party}
+      partyTime={this.state.partyTime} />
       </div>
     );
   }
