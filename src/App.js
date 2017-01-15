@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import AddMovie from './components/AddMovie';
-import MovieList from './components/MovieList';
 import Header from './components/Header';
 import Party from './components/Party';
 import axios from 'axios';
@@ -53,7 +51,7 @@ class App extends Component {
     });
   }
   joinParty(){
-    if(this.state.joinParty&&this.state.partyTime===false){
+    if(this.state.joinParty){
     return (<form onSubmit={(e)=>this.handleGetParty(e)}>
         <input type="text" autoFocus={true} value={this.state.partyName} required={true} onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
       <input className="btn-primary" type="submit" value="Submit" />
@@ -61,7 +59,7 @@ class App extends Component {
     }
   }
   newParty(){
-    if(this.state.newParty&&this.state.partyTime===false){
+    if(this.state.newParty){
     return (<form onSubmit={(e)=>this.handleCreateParty(e)}>
         <input type="text" autoFocus={true} value={this.state.partyName} required={true} onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
       <input className="btn-primary" type="submit" value="Submit" />

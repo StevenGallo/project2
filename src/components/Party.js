@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import AddMovie from './AddMovie';
+import MovieList from './MovieList';
 
 class Party extends Component {
   constructor(props) {
@@ -10,6 +12,7 @@ class Party extends Component {
       addMovie:true,
       error:'',
       }
+      this.addMovieTitle=this.addMovieTitle.bind(this)
   }
   componentDidMount(){
     this.getMovies()
@@ -28,7 +31,6 @@ class Party extends Component {
     });
   }
   checkMovies(){
-    this.getMovies()
     let used=false
     this.state.movies.map((movie)=>{
       if(movie===this.state.name){
@@ -75,12 +77,13 @@ class Party extends Component {
   render() {
     return (
       <div className="App">
-      {this.addMovieTitle()}
-      {this.state.error}
-        <ul className="list-unstyled center-block list-group">
-      {this.state.movies.map((movie,index) => {
-        return<li key={index}>{movie}</li>})}
-        </ul>
+      <AddMovie
+      addMovieTitle={this.addMovieTitle}
+      error={this.state.error}
+      />
+      <MovieList
+      movies={this.state.movies}
+      />
       </div>
     );
   }

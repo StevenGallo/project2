@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import Movie from './Movie';
 
 class MovieList extends Component {
   render() {
     return (
-      <div>
-
-      </div>
+      <ul className="list-unstyled center-block list-group">
+      {this.props.movies.map((movie,index) => {
+        return<Movie key={index} movie={movie}/>})}
+        </ul>
     );
   }
 }
