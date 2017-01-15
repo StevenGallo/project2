@@ -36,7 +36,7 @@ class App extends Component {
     });
   }
   createParty() {
-    let newParty = {partyName:this.state.partyName, movies: this.state.movies, newParty: true}
+    let newParty = {partyName:this.state.partyName, movies: this.state.movies}
     axios({
       url: '.json',
       baseURL: 'https://netflix-party.firebaseio.com/',
@@ -81,30 +81,32 @@ class App extends Component {
       if(this.checkName()){
         this.getParty()
       }else{
-      this.setState({partyName: '', error:'That party does not exist. Please enter valid party name'})
+      this.setState({partyName: '',
+       error:'That party does not exist. Please enter valid party name'})
     }
   }
   handleCreateParty(event){
   event.preventDefault()
+  this.getParties()
     if(this.partyName!==true&&this.checkName()){
-      this.setState({partyName: '', error:'That party name already exists. Please choose a new name'})
+      this.setState({partyName: '',
+       error:'That party name already exists. Please choose a new name'})
     }else{
       this.createParty()
     }
   }
   checkName(){
     this.getParties()
+    let found=false
     console.log(this.state.parties)
     for (const key in this.state.parties){
       console.log(`${key} + ${this.state.parties[key].partyName}`)
       if(this.state.partyName===this.state.parties[key].partyName){
         console.log('found')
-        return true
-      }else{
-        console.log('notFound')
-        return false
+        found=true
       }
     }
+    return found
   }
   getParty(){
 
@@ -116,6 +118,9 @@ class App extends Component {
       {this.newParty()}
       {this.joinParty()}
       <p>{this.state.error}</p>
+      <AddMovie />
+      <MovieList />
+      <Party />
       </div>
     );
   }
