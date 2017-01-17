@@ -87,7 +87,7 @@ class Party extends Component {
   handleVote(vote,index,event){
     event.preventDefault()
     console.log(index)
-    let votes=this.state.votes
+    let votes=this.state.movies[index].votes
     votes=votes+vote
     this.setState({votes})
     console.log(votes)
@@ -98,11 +98,10 @@ class Party extends Component {
       data: {votes}
     }).then((response) => {
       console.log(response)
-
+      this.getMovies()
       }).catch((error) => {
         console.log(error);
       });
-
   }
   render() {
     return (
