@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import AddMovie from './AddMovie';
 import MovieList from './MovieList';
+import EndVote from './EndVote';
 
 class Party extends Component {
   constructor(props) {
@@ -13,9 +14,11 @@ class Party extends Component {
       addMovie:true,
       error:'',
       votes:0,
+      winner:null,
       }
       this.addMovieTitle=this.addMovieTitle.bind(this)
       this.handleVote=this.handleVote.bind(this)
+      this.checkWinner=this.checkWinner.bind(this)
   }
   componentDidMount(){
     this.getMovies()
@@ -84,6 +87,22 @@ class Party extends Component {
       })
     }
   }
+  checkWinner(event){
+    event.preventDefault()
+    let voteArr
+    voteArr=this.state.movies.map((movie,index)=>{return movie.votes})
+    let newArr=voteArr
+    newArr.slice(0).sort()
+    console.log(newArr)
+    if(newArr[newArr.length-1]===newArr[newArr.length-2]){
+      alert("tie! keep voting")
+    }else{
+    let winnerIndex=voteArr.indexOf(Math.max(...voteArr))
+    console.log(winnerIndex)
+    let winner=this.state.movies[winnerIndex]
+    this.setState({ winner })
+    }
+  }
   handleVote(vote,index,event){
     event.preventDefault()
     console.log(index)
@@ -113,6 +132,10 @@ class Party extends Component {
       <MovieList
       movies={this.state.movies}
       handleVote={this.handleVote}
+      />
+      <EndVote
+      checkWinner={this.checkWinner}
+      winner={this.state.winner}
       />
       </div>
     );
