@@ -5,9 +5,9 @@ class Movie extends Component {
     return (
       <li>
       {this.props.movieName}
-      <button onClick={(e)=>{this.props.handleVote(1, this.props.index, e)}} className="btn-primary">up</button>
-      <button onClick={(e)=>{this.props.handleVote(-1, this.props.index, e)}} className="btn-primary">down</button>
-      <button onClick={(e)=>{this.props.deleteMovie(this.props.movie, this.props.index, e)}} className="btn-primary">delete</button>
+      <button onClick={(e)=>{this.props.handleVote(1, this.props.index, e)}} className="glyphicon glyphicon-plus"></button>
+      <button onClick={(e)=>{this.props.handleVote(-1, this.props.index, e)}} className="glyphicon glyphicon-plus"></button>
+      <button onClick={(e)=>{this.props.deleteMovie(this.props.index, e)}} className="glyphicon glyphicon-remove"></button>
       {this.props.movies[this.props.index].votes}
       </li>
     );

@@ -33,6 +33,7 @@ class Party extends Component {
     }).then((response) => {
       console.log(response.data.movies)
       let movies=response.data.movies;
+      movies.sort((a,b) => { return b.votes - a.votes })
       this.setState({ movies })
     }).catch((error) => {
       console.log(error);
@@ -60,9 +61,9 @@ class Party extends Component {
     let movieName=this.state.name
     let movie=this.state.movie
     let votes=this.state.votes
-    let partyName=this.props.partyName
     movie={movieName:movieName, votes:votes}
       movies.push(movie)
+      movies.sort((a,b) => { return b.votes - a.votes })
       this.setState({ movies })
     axios({
       url: `${this.props.partyKey}/.json`,
@@ -110,7 +111,8 @@ class Party extends Component {
     event.preventDefault()
     console.log(index)
     let votes=this.state.movies[index].votes
-    votes=votes+vote
+    console.log(votes)
+    votes+=vote
     this.setState({votes})
     console.log(votes)
     axios({
@@ -125,7 +127,7 @@ class Party extends Component {
         console.log(error);
       });
   }
-  deleteMovie(movie,index,event){
+  deleteMovie(index,event){
     event.preventDefault()
     let movies=this.state.movies
       movies.splice(index,1)
@@ -164,7 +166,7 @@ class Party extends Component {
       }}
   render() {
     return (
-      <div className="App">
+      <div>
       {this.checkDetails()}
       <AddMovie
       addMovieTitle={this.addMovieTitle}

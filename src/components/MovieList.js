@@ -10,7 +10,6 @@ class MovieList extends Component {
         console.log(`${movie.movieName}+ ${index}`)
         return <Movie
         key={index}
-        movie={movie}
         movieName={movie.movieName}
         movies={this.props.movies}
         index={index}

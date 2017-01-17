@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Header from './components/Header';
 import Party from './components/Party';
 import axios from 'axios';
+import background from './background.jpg'
 import './App.css';
 
 class App extends Component {
@@ -59,7 +60,9 @@ class App extends Component {
   joinParty(){
     if(this.state.joinParty){
     return (<form onSubmit={(e)=>this.handleGetParty(e)}>
-        <input type="text" autoFocus={true} value={this.state.partyName} required={true} onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
+      <div className="form-group">
+      <input className="form-control" type="text" autoFocus={true} value={this.state.partyName} required={true} onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
+      </div>
       <input className="btn-primary" type="submit" value="Party Name" />
     </form>)
     }
@@ -67,7 +70,9 @@ class App extends Component {
   newParty(){
     if(this.state.newParty&&this.state.newDetails===false){
     return (<form onSubmit={(e)=>this.handleCreateParty(e)}>
-        <input type="text" autoFocus={true} value={this.state.partyName} required={true} onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
+      <div className="form-group">
+      <input className="form-control" type="text" autoFocus={true} value={this.state.partyName} required={true} onChange={(e)=>{this.setState({partyName:e.target.value,})}} />
+      </div>
       <input className="btn-primary" type="submit" value="Party Name" />
     </form>)
     }
@@ -83,11 +88,19 @@ class App extends Component {
   details(){
     if(this.state.newDetails){
       return(<form onSubmit={(e)=>this.handleDetails(e)}>
-        <input type="text" autoFocus={true} value={this.state.place} required={true} onChange={(e)=>{this.setState({place:e.target.value,})}} />
-        <input type="text" value={this.state.time} required={true} onChange={(e)=>{this.setState({time:e.target.value,})}} />
-        <input type="text" value={this.state.date} required={true} onChange={(e)=>{this.setState({date:e.target.value,})}} />
-      <input className="btn-primary" type="submit" value="Set Details" />
-    </form>)
+        <div className="form-group">
+        <input className="form-control" type="text" autoFocus={true} value={this.state.place} required={true} onChange={(e)=>{this.setState({place:e.target.value,})}} />
+        </div>
+        <div className="form-group">
+        <input className="form-control" type="text" value={this.state.time} required={true} onChange={(e)=>{this.setState({time:e.target.value,})}} />
+        </div>
+        <div className="form-group">
+        <input className="form-control" type="text" value={this.state.date} required={true} onChange={(e)=>{this.setState({date:e.target.value,})}} />
+        </div>
+        <div className="form-group">
+        <input className="btn-primary" type="submit" value="Set Details" />
+        </div>
+        </form>)
     }
   }
   handleGetParty(event){
@@ -137,7 +150,10 @@ class App extends Component {
   render() {
     if(this.state.partyTime&&this.state.key){
       return(
-        <div>
+        <div className="App">
+        <Header
+        partyName={this.state.partyName}
+        />
         {this.details()}
         <Party
         partyName={this.state.partyName}
@@ -151,6 +167,7 @@ class App extends Component {
     }else{
     return (
       <div className="App">
+      <Header />
       {this.chooseParty()}
       {this.newParty()}
       {this.details()}

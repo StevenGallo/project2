@@ -46,7 +46,12 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-
+body{
+  font-family: 'Libre Franklin', sans-serif;
+  background-image: url('https://s-media-cache-ak0.pinimg.com/originals/ec/cf/ed/eccfedacc5763b84232070d675151f80.jpg');
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
 
 .App {
   text-align: center;
