@@ -91,15 +91,17 @@ class Party extends Component {
     event.preventDefault()
     let voteArr
     voteArr=this.state.movies.map((movie,index)=>{return movie.votes})
-    let newArr=voteArr
-    newArr.slice(0).sort()
-    console.log(newArr)
-    if(newArr[newArr.length-1]===newArr[newArr.length-2]){
-      alert("tie! keep voting")
-    }else{
     let winnerIndex=voteArr.indexOf(Math.max(...voteArr))
     console.log(winnerIndex)
     let winner=this.state.movies[winnerIndex]
+    let checkArr=voteArr.splice(winnerIndex,1)
+    console.log(checkArr)
+    console.log(voteArr)
+    let checkerIndex=voteArr.indexOf(Math.max(...voteArr))
+    console.log(checkerIndex)
+    if(voteArr[checkerIndex]===checkArr[0]){
+      alert("tie! keep voting")
+    }else{
     this.setState({ winner })
     }
   }
