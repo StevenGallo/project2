@@ -114,8 +114,9 @@ class App extends Component {
 
   }
   render() {
-    if(this.state.partyTime){
+    if(this.state.partyTime&&this.state.key){
       return(<Party
+        partyName={this.state.partyName}
         parties={this.state.parties}
         party={this.state.party}
         partyKey={this.state.key}

@@ -9,33 +9,38 @@ class Party extends Component {
     this.state={
       name:'',
       movies:[],
+      movie:{},
       addMovie:true,
       error:'',
+      votes:0,
       }
       this.addMovieTitle=this.addMovieTitle.bind(this)
+      this.handleVote=this.handleVote.bind(this)
   }
   componentDidMount(){
     this.getMovies()
   }
   getMovies(){
+    console.log(this.props.partyKey)
     axios({
       url: `${this.props.partyKey}.json`,
       baseURL: 'https://netflix-party.firebaseio.com/',
       method: "GET"
     }).then((response) => {
-      console.log(response.data)
-      let movies=response.data.movies
-      this.setState({movies})
+      console.log(response.data.movies)
+      let movies=response.data.movies;
+      this.setState({ movies })
     }).catch((error) => {
       console.log(error);
     });
   }
   checkMovies(){
     let used=false
+    if(this.state.movies){
     this.state.movies.map((movie)=>{
       if(movie===this.state.name){
         used=true
-      }})
+      }})}
     return used
   }
   addMovieTitle(){
@@ -47,18 +52,23 @@ class Party extends Component {
     }
   }
   addMovie(){
-    let movies=this.state.movies
-      movies.push(this.state.name)
-      this.setState({ addMovie:false })
+    let movies=this.state.movies || []
+    let movieName=this.state.name
+    let movie=this.state.movie
+    let votes=this.state.votes
+    let partyName=this.props.partyName
+    movie={movieName:movieName, votes:votes}
+      movies.push(movie)
+      this.setState({ movies })
     axios({
-      url: `${this.props.partyKey}.json`,
+      url: `${this.props.partyKey}/.json`,
       baseURL: 'https://netflix-party.firebaseio.com/',
       method: "PATCH",
-      data: { movies }
+      data: {movies}
     }).then((response) => {
       console.log(response)
-      movies=response.data.movies
-      this.setState({ movies})
+      let movies=response.data.movies;
+      this.setState({ movies, name:'' })
       }).catch((error) => {
         console.log(error);
       });
@@ -74,6 +84,26 @@ class Party extends Component {
       })
     }
   }
+  handleVote(vote,index,event){
+    event.preventDefault()
+    console.log(index)
+    let votes=this.state.votes
+    votes=votes+vote
+    this.setState({votes})
+    console.log(votes)
+    axios({
+      url: `${this.props.partyKey}/movies/${index}/.json`,
+      baseURL: 'https://netflix-party.firebaseio.com/',
+      method: "PATCH",
+      data: {votes}
+    }).then((response) => {
+      console.log(response)
+
+      }).catch((error) => {
+        console.log(error);
+      });
+
+  }
   render() {
     return (
       <div className="App">
@@ -83,6 +113,7 @@ class Party extends Component {
       />
       <MovieList
       movies={this.state.movies}
+      handleVote={this.handleVote}
       />
       </div>
     );
