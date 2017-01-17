@@ -16,9 +16,10 @@ class Party extends Component {
       votes:0,
       winner:null,
       }
-      this.addMovieTitle=this.addMovieTitle.bind(this)
-      this.handleVote=this.handleVote.bind(this)
-      this.checkWinner=this.checkWinner.bind(this)
+      this.addMovieTitle=this.addMovieTitle.bind(this);
+      this.handleVote=this.handleVote.bind(this);
+      this.checkWinner=this.checkWinner.bind(this);
+      this.deleteMovie=this.deleteMovie.bind(this);
   }
   componentDidMount(){
     this.getMovies()
@@ -47,7 +48,7 @@ class Party extends Component {
     return used
   }
   addMovieTitle(){
-    if(this.state.addMovie){
+    if(this.state.addMovie&&this.state.addMovie){
       return (<form onSubmit={(e)=>this.handleMovieAdd(e)}>
         <input type="text" autoFocus={true} value={this.state.name} required={true} onChange={(e)=>{this.setState({name:e.target.value,})}} />
       <input className="btn-primary" type="submit" value="Submit" />
@@ -102,7 +103,7 @@ class Party extends Component {
     if(voteArr[checkerIndex]===checkArr[0]){
       alert("tie! keep voting")
     }else{
-    this.setState({ winner })
+    this.setState({ winner, addMovie:false })
     }
   }
   handleVote(vote,index,event){
@@ -124,16 +125,56 @@ class Party extends Component {
         console.log(error);
       });
   }
+  deleteMovie(movie,index,event){
+    event.preventDefault()
+    let movies=this.state.movies
+      movies.splice(index,1)
+    axios({
+      url: `${this.props.partyKey}/movies/${index}/.json`,
+      baseURL: 'https://netflix-party.firebaseio.com/',
+      method: "DELETE",
+    }).then((response) => {
+      this.setState({movies})
+      }).catch((error) => {
+        console.log(error);
+      });
+    axios({
+      url: `${this.props.partyKey}/.json`,
+      baseURL: 'https://netflix-party.firebaseio.com/',
+      method: "PATCH",
+      data: {movies}
+    }).then((response) => {
+    console.log(response)
+    }).catch((error) => {
+      console.log(error);
+    });
+
+  }
+  checkDetails()
+  {if(this.props.editDetails){
+    return(
+      <div>
+      <p>Place:{this.props.party[this.props.partyKey].partyDetails.place}</p>
+      <p>Date:{this.props.party[this.props.partyKey].partyDetails.date}</p>
+      <p>Time:{this.props.party[this.props.partyKey].partyDetails.time}</p>
+       <button onClick={()=>{this.props.editDetails()}} className="btn-primary">Edit</button>
+       </div>)
+      }else{
+        return <div/>
+      }}
   render() {
     return (
       <div className="App">
+      {this.checkDetails()}
       <AddMovie
       addMovieTitle={this.addMovieTitle}
       error={this.state.error}
       />
       <MovieList
+      addMovie={this.state.addMovie}
       movies={this.state.movies}
       handleVote={this.handleVote}
+      deleteMovie={this.deleteMovie}
       />
       <EndVote
       checkWinner={this.checkWinner}
