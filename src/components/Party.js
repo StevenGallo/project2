@@ -51,7 +51,9 @@ class Party extends Component {
   addMovieTitle(){
     if(this.state.addMovie&&this.state.addMovie){
       return (<form onSubmit={(e)=>this.handleMovieAdd(e)}>
-        <input type="text" autoFocus={true} value={this.state.name} required={true} onChange={(e)=>{this.setState({name:e.target.value,})}} />
+        <div className="form-group">
+        <input className="form-control" type="text" autoFocus={true} value={this.state.name} required={true} onChange={(e)=>{this.setState({name:e.target.value,})}} />
+        </div>
       <input className="btn-primary" type="submit" value="Submit" />
     </form>)
     }
@@ -155,11 +157,13 @@ class Party extends Component {
   checkDetails()
   {if(this.props.editDetails){
     return(
-      <div>
-      <p>Place:{this.props.party[this.props.partyKey].partyDetails.place}</p>
-      <p>Date:{this.props.party[this.props.partyKey].partyDetails.date}</p>
-      <p>Time:{this.props.party[this.props.partyKey].partyDetails.time}</p>
+      <div className="container">
+      <div className="jumbotron">
+      <p>Place: {this.props.party[this.props.partyKey].partyDetails.place}</p>
+      <p>Date: {this.props.party[this.props.partyKey].partyDetails.date}</p>
+      <p>Time: {this.props.party[this.props.partyKey].partyDetails.time}</p>
        <button onClick={()=>{this.props.editDetails()}} className="btn-primary">Edit</button>
+       </div>
        </div>)
       }else{
         return <div/>

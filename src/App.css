@@ -47,12 +47,24 @@ table {
   border-spacing: 0;
 }
 body{
-  font-family: 'Libre Franklin', sans-serif;
+  font-family: 'Libre Franklin', sans-serif !important;
   background-image: url('https://s-media-cache-ak0.pinimg.com/originals/ec/cf/ed/eccfedacc5763b84232070d675151f80.jpg');
   background-size: 100%;
   background-repeat: no-repeat;
+  color: white !important;
 }
 
+p{
+  font-size: 20px;
+}
+span{
+  font-size: 20px;
+}
+button{
+}
+.jumbotron{
+  color: black !important;
+}
 .App {
   text-align: center;
 }

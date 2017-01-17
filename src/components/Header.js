@@ -9,8 +9,8 @@ class Header extends Component {
     headerText="join a Movie Party"
   }
   return(
-  <div class="container">
-  <div class="jumbotron">
+  <div className="container">
+  <div className="jumbotron">
   <h1>Movie Party</h1>
   <p>{headerText}</p>
   </div>
